@@ -166,7 +166,7 @@ public:
     }
   }
 
-protected:
+public:
   std::vector<MapProcContainer> mapContainer;
   std::vector<DataContainer> dataContainers;
 };

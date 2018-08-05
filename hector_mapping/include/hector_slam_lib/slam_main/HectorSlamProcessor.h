@@ -51,16 +51,22 @@ class HectorSlamProcessor
 {
 public:
 
-  HectorSlamProcessor(float mapResolution, int mapSizeX, int mapSizeY , const Eigen::Vector2f& startCoords, int multi_res_size, DrawInterface* drawInterfaceIn = 0, HectorDebugInfoInterface* debugInterfaceIn = 0)
+  HectorSlamProcessor(float mapResolution, int mapSizeX, int mapSizeY , const Eigen::Vector2f& startCoords, int multi_res_size, int *mapdata, DrawInterface* drawInterfaceIn = 0, HectorDebugInfoInterface* debugInterfaceIn = 0)
     : drawInterface(drawInterfaceIn)
     , debugInterface(debugInterfaceIn)
   {
-    mapRep = new MapRepMultiMap(mapResolution, mapSizeX, mapSizeY, multi_res_size, startCoords, drawInterfaceIn, debugInterfaceIn);
+    auto mm = new MapRepMultiMap(mapResolution, mapSizeX, mapSizeY, multi_res_size, startCoords, drawInterfaceIn, debugInterfaceIn);
 
     this->reset();
 
     this->setMapUpdateMinDistDiff(0.4f *1.0f);
     this->setMapUpdateMinAngleDiff(0.13f * 1.0f);
+	for (int x=0; x < mapSizeX; x++) {
+		for (int y = 0; y < mapSizeY; y++) {
+			mm->mapContainer[0].gridMap->getCell(x*mapSizeX+y) = mapdata[x * mapSizeX + y];
+		}
+	}
+	mapRep = mm;
   }
 
   ~HectorSlamProcessor()
@@ -86,7 +92,8 @@ public:
 
     //std::cout << "\n1";
     //std::cout << "\n" << lastScanMatchPose << "\n";
-    if(util::poseDifferenceLargerThan(newPoseEstimateWorld, lastMapUpdatePose, paramMinDistanceDiffForMapUpdate, paramMinAngleDiffForMapUpdate) || map_without_matching){
+    if(false){ //dont update map
+	//if(util::poseDifferenceLargerThan(newPoseEstimateWorld, lastMapUpdatePose, paramMinDistanceDiffForMapUpdate, paramMinAngleDiffForMapUpdate) || map_without_matching){
 
       mapRep->updateByScan(dataContainer, newPoseEstimateWorld);
 
