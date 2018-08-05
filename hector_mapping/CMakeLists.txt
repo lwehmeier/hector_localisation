@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(hector_mapping)
+project(hector_localisation)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -85,7 +85,7 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-add_executable(hector_mapping
+add_executable(hector_localisation
   src/HectorDebugInfoProvider.h
   src/HectorDrawings.h
   src/HectorMappingRos.h
@@ -97,10 +97,10 @@ add_executable(hector_mapping
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(hector_mapping hector_mapping_generate_messages_cpp)
+#add_dependencies(hector_mapping hector_mapping_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(hector_mapping
+target_link_libraries(hector_localisation
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
 )
@@ -120,7 +120,7 @@ target_link_libraries(hector_mapping
 # )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS hector_mapping
+install(TARGETS hector_localisation
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

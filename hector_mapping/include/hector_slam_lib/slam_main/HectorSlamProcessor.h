@@ -51,7 +51,7 @@ class HectorSlamProcessor
 {
 public:
 
-  HectorSlamProcessor(float mapResolution, int mapSizeX, int mapSizeY , const Eigen::Vector2f& startCoords, int multi_res_size, int *mapdata, DrawInterface* drawInterfaceIn = 0, HectorDebugInfoInterface* debugInterfaceIn = 0)
+  HectorSlamProcessor(float mapResolution, int mapSizeX, int mapSizeY , const Eigen::Vector2f& startCoords, int multi_res_size, signed char *mapdata, DrawInterface* drawInterfaceIn = 0, HectorDebugInfoInterface* debugInterfaceIn = 0)
     : drawInterface(drawInterfaceIn)
     , debugInterface(debugInterfaceIn)
   {
@@ -63,7 +63,10 @@ public:
     this->setMapUpdateMinAngleDiff(0.13f * 1.0f);
 	for (int x=0; x < mapSizeX; x++) {
 		for (int y = 0; y < mapSizeY; y++) {
-			mm->mapContainer[0].gridMap->getCell(x*mapSizeX+y) = mapdata[x * mapSizeX + y];
+			if(mapdata[x * mapSizeX + y] > 0.3)
+				mm->mapContainer[0].gridMap->getCell(x*mapSizeX+y).setOccupied();
+			else if(mapdata[x * mapSizeX + y] >= 0)
+				mm->mapContainer[0].gridMap->getCell(x*mapSizeX+y).setFree();
 		}
 	}
 	mapRep = mm;

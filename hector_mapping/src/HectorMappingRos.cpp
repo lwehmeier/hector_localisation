@@ -32,7 +32,7 @@
 
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <nav_msgs/Odometry.h>
-
+#include <nav_msgs/GetMap.h>
 #include "sensor_msgs/PointCloud2.h"
 
 #include "HectorDrawings.h"
@@ -127,12 +127,12 @@ HectorMappingRos::HectorMappingRos()
   //load initial map
   ros::service::waitForService("static_map");
   ros::ServiceClient mapClient
-	  = noce_.serviceClient<nav_msgs::GetMap>("map");
+	  = node_.serviceClient<nav_msgs::GetMap>("map");
   nav_msgs::GetMap mapSrv;
   mapClient.call(mapSrv);
-  std::cout << mapSrv << std::endl;
+  std::cout << mapSrv.response.map << std::endl;
 
-  slamProcessor = new hectorslam::HectorSlamProcessor(static_cast<float>(p_map_resolution_), p_map_size_, p_map_size_, Eigen::Vector2f(p_map_start_x_, p_map_start_y_), p_map_multi_res_levels_, mapSrv.map.data, hectorDrawings, debugInfoProvider);
+  slamProcessor = new hectorslam::HectorSlamProcessor(static_cast<float>(p_map_resolution_), p_map_size_, p_map_size_, Eigen::Vector2f(p_map_start_x_, p_map_start_y_), p_map_multi_res_levels_, mapSrv.response.map.data.data(), hectorDrawings, debugInfoProvider);
   slamProcessor->setUpdateFactorFree(p_update_factor_free_);
   slamProcessor->setUpdateFactorOccupied(p_update_factor_occupied_);
   slamProcessor->setMapUpdateMinDistDiff(p_map_update_distance_threshold_);

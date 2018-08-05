@@ -38,7 +38,6 @@ class LogOddsCell
 {
 public:
 
-  /*
   void setOccupied()
   {
     logOddsVal += 0.7f;
@@ -48,7 +47,7 @@ public:
   {
     logOddsVal -= 0.4f;
   };
-  */
+
 
 
   /**
