@@ -62,8 +62,8 @@ HectorMappingRos::HectorMappingRos()
   private_nh_.param("advertise_map_service", p_advertise_map_service_,true);
   private_nh_.param("scan_subscriber_queue_size", p_scan_subscriber_queue_size_, 5);
 
-  private_nh_.param("map_resolution", p_map_resolution_, 0.025);
-  private_nh_.param("map_size", p_map_size_, 1024);
+  private_nh_.param("map_resolution", p_map_resolution_, 0.05);
+  private_nh_.param("map_size", p_map_size_, 512);
   private_nh_.param("map_start_x", p_map_start_x_, 0.5);
   private_nh_.param("map_start_y", p_map_start_y_, 0.5);
   private_nh_.param("map_multi_res_levels", p_map_multi_res_levels_, 3);
@@ -82,7 +82,7 @@ HectorMappingRos::HectorMappingRos()
   private_nh_.param("use_tf_pose_start_estimate", p_use_tf_pose_start_estimate_,false);
   private_nh_.param("map_with_known_poses", p_map_with_known_poses_, false);
 
-  private_nh_.param("base_frame", p_base_frame_, std::string("base_link"));
+  private_nh_.param("base_frame", p_base_frame_, std::string("base_footprint"));
   private_nh_.param("map_frame", p_map_frame_, std::string("map"));
   private_nh_.param("odom_frame", p_odom_frame_, std::string("odom"));
 
@@ -127,10 +127,14 @@ HectorMappingRos::HectorMappingRos()
   //load initial map
   ros::service::waitForService("static_map");
   ros::ServiceClient mapClient
-	  = node_.serviceClient<nav_msgs::GetMap>("map");
+	  = node_.serviceClient<nav_msgs::GetMap>("static_map");
   nav_msgs::GetMap mapSrv;
-  mapClient.call(mapSrv);
-  std::cout << mapSrv.response.map << std::endl;
+  if(!mapClient.call(mapSrv))
+  {
+	  std::cout<<"failed to call map service. Exiting..."<<std::endl;
+	std::terminate();
+  }
+//  std::cout << mapSrv.response.map << std::endl;
 
   slamProcessor = new hectorslam::HectorSlamProcessor(static_cast<float>(p_map_resolution_), p_map_size_, p_map_size_, Eigen::Vector2f(p_map_start_x_, p_map_start_y_), p_map_multi_res_levels_, mapSrv.response.map.data.data(), hectorDrawings, debugInfoProvider);
   slamProcessor->setUpdateFactorFree(p_update_factor_free_);

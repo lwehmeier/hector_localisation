@@ -56,6 +56,7 @@ public:
     , debugInterface(debugInterfaceIn)
   {
     auto mm = new MapRepMultiMap(mapResolution, mapSizeX, mapSizeY, multi_res_size, startCoords, drawInterfaceIn, debugInterfaceIn);
+	mapRep = mm;
 
     this->reset();
 
@@ -63,13 +64,26 @@ public:
     this->setMapUpdateMinAngleDiff(0.13f * 1.0f);
 	for (int x=0; x < mapSizeX; x++) {
 		for (int y = 0; y < mapSizeY; y++) {
+			//std::cout<<x<<":"<<y<<std::endl;
 			if(mapdata[x * mapSizeX + y] > 0.3)
+			{
 				mm->mapContainer[0].gridMap->getCell(x*mapSizeX+y).setOccupied();
+				//mm->mapContainer[0].gridMap->getCell(2*x*mapSizeX+y).setOccupied();
+				//mm->mapContainer[0].gridMap->getCell(2*x*mapSizeX+y+1).setOccupied();
+				//mm->mapContainer[0].gridMap->getCell((2*x+1)*mapSizeX+y).setOccupied();
+				//mm->mapContainer[0].gridMap->getCell((2*x+1)*mapSizeX+y+1).setOccupied();
+			}
 			else if(mapdata[x * mapSizeX + y] >= 0)
+			{
 				mm->mapContainer[0].gridMap->getCell(x*mapSizeX+y).setFree();
+				//mm->mapContainer[0].gridMap->getCell(2*x*mapSizeX+y).setFree();
+				//mm->mapContainer[0].gridMap->getCell(2*x*mapSizeX+y+1).setFree();
+				//mm->mapContainer[0].gridMap->getCell((2*x+1)*mapSizeX+y).setFree();
+				//mm->mapContainer[0].gridMap->getCell((2*x+1)*mapSizeX+y+1).setFree();
+			}
 		}
 	}
-	mapRep = mm;
+	std::cout<<"map load done"<<std::endl;
   }
 
   ~HectorSlamProcessor()
