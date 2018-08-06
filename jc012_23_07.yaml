@@ -1,4 +1,4 @@
-image: /erl_bot_ros/src/hector_localisation/jc012_23_07.pgm
+image: /home/ubuntu/catkin_ws/src/hector_localisation/jc012_23_07.pgm
 resolution: 0.050000
 origin: [-12.824999, -12.824999, 0.000000]
 negate: 0
